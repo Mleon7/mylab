@@ -1,0 +1,17 @@
+Times:
+
+10 simulations: 0m0.026s
+100 simulations: 0m0.028s
+1000 simulations: 0m0.039s
+10000 simulations: 0m0.111s
+100000 simulations: 0m0.811s
+1000000 simulations: 0m7.494s
+
+Questions:
+
+Which predictions, if any, proved incorrect as you increased the number of simulations?: 100000
+
+Suppose you're charged a fee for each second of compute time your program uses.
+After how many simulations would you call the predictions "good enough"?: 10000
+
+# right answer: https://github.com/BogdanOtava/CS50x/blob/master/Week%206%20-%20Python/Lab6/WorldCup/answers.txt
