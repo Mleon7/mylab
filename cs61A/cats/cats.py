@@ -158,6 +158,20 @@ def autocorrect(typed_word, word_list, diff_function, limit):
     # BEGIN PROBLEM 5
     "*** YOUR CODE HERE ***"
     # END PROBLEM 5
+    # 1. If the typed_word is contained inside the word_list, autocorrect returns that word.
+    # 2. returns the word from word_list that has the lowest difference from the provided typed_word based on the diff_function
+    # However, if the lowest difference between typed_word and any of the words in word_list is greater than limit, then typed_word is returned instead.
+    # If typed_word is not contained inside word_list, and multiple strings have the same lowest difference from typed_word according to the diff_function, autocorrect should return the string that appears first in word_list.
+    min_difference = diff_function(typed_word, word_list[0], limit)
+    result = word_list[0]
+    for word in word_list:
+        if typed_word == word:
+            return typed_word
+        difference = diff_function(typed_word, word, limit)
+        if min_difference > difference:
+            min_difference = difference
+            result = word
+    return result if min_difference <= limit else typed_word
 
 
 def feline_fixes(typed, source, limit):
@@ -183,9 +197,27 @@ def feline_fixes(typed, source, limit):
     5
     """
     # BEGIN PROBLEM 6
-    assert False, 'Remove this line'
+    # difference = 0
+    # for i in range(min(len(typed), len(source))):
+    #     if typed[i] != source[i]:
+    #         difference += 1
+    # difference += abs(len(typed) - len(source))
+    # return difference
+    if len(typed) == 0 and len(source) == 0:
+        return 0
+    elif len(typed) == 0:
+        return len(source)
+    elif len(source) == 0:
+        return len(typed)
+    else:
+        if typed[0] == source[0]:
+            substitute_count = feline_fixes(typed[1:], source[1:], limit)
+        elif limit == 0:
+            return 999
+        else:
+            substitute_count = 1 + feline_fixes(typed[1:], source[1:], limit - 1)
+    return substitute_count
     # END PROBLEM 6
-
 
 def minimum_mewtations(start, goal, limit):
     """A diff function that computes the edit distance from START to GOAL.
@@ -202,23 +234,51 @@ def minimum_mewtations(start, goal, limit):
     >>> minimum_mewtations("ckiteus", "kittens", big_limit) # ckiteus -> kiteus -> kitteus -> kittens
     3
     """
-    assert False, 'Remove this line'
-    if ______________:  # Fill in the condition
-        # BEGIN
-        "*** YOUR CODE HERE ***"
-        # END
-    elif ___________:  # Feel free to remove or add additional cases
-        # BEGIN
-        "*** YOUR CODE HERE ***"
-        # END
+    '''
+    by myself, buf failed
+    if start == '' and goal == '':  # Fill in the condition
+        return 0
+    elif limit == 0:  # Feel free to remove or add additional cases
+        return 999
+    elif start == '':
+        count = 1 + minimum_mewtations(goal[0] + start, goal, limit - 1) 
+    elif goal == '':
+        count = 1 + minimum_mewtations(start[1:], goal, limit - 1)
     else:
-        add = ...  # Fill in these lines
-        remove = ...
-        substitute = ...
-        # BEGIN
-        "*** YOUR CODE HERE ***"
-        # END
+        if start[0] != goal[0]:
+            if len(start) == 1:
+                count = 1 + minimum_mewtations(start[1:], goal[1:], limit - 1) # change
+            elif start[0] == goal[1]:
+                count = 1 + minimum_mewtations(goal[0] + start, goal, limit - 1)  # add
+            elif start[1] == goal[0]:
+                count = 1 + minimum_mewtations(start[1:], goal, limit - 1)  # remove
+            elif start[1] == goal[1]:
+                count = 1 + minimum_mewtations(start[1:], goal[1:], limit - 1) # change
+        else:
+            count = 0 + minimum_mewtations(start[1:], goal[1:], limit-1) # without change
+    return count
+    '''
+    # !!! 下面是用chatgpt跑的，结果正确，但不理解，暂时跳过 !!!
+    if start == goal:
+        return 0
 
+    if limit == 0:
+        return float('inf')
+
+    if len(start) == 0:
+        return len(goal)
+
+    if len(goal) == 0:
+        return len(start)
+
+    if start[0] == goal[0]:
+        return minimum_mewtations(start[1:], goal[1:], limit)
+
+    add_diff = 1 + minimum_mewtations(start, goal[1:], limit - 1)
+    remove_diff = 1 + minimum_mewtations(start[1:], goal, limit - 1)
+    substitute_diff = 1 + minimum_mewtations(start[1:], goal[1:], limit - 1)
+
+    return min(add_diff, remove_diff, substitute_diff)
 
 def final_diff(typed, source, limit):
     """A diff function that takes in a string TYPED, a string SOURCE, and a number LIMIT.
