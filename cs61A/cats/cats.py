@@ -319,8 +319,16 @@ def report_progress(typed, prompt, user_id, upload):
     """
     # BEGIN PROBLEM 8
     "*** YOUR CODE HERE ***"
-    # END PROBLEM 8
+    count = 0
+    for i in range(len(typed)):
+        if typed[i] != prompt[i]:
+            break
+        count += 1
+    progress = count / len(prompt)
 
+    upload({'id': user_id, 'progress': progress})
+    return progress
+    # END PROBLEM 8
 
 def time_per_word(words, times_per_player):
     """Given timing data, return a match dictionary, which contains a
@@ -341,6 +349,14 @@ def time_per_word(words, times_per_player):
     """
     # BEGIN PROBLEM 9
     "*** YOUR CODE HERE ***"
+    times = []
+    for player_times in times_per_player:
+        word_time = []
+        for i in range(len(words)):
+            word_time.append(player_times[i + 1] - player_times[i])
+        times.append(word_time)
+    return match(words, times)
+
     # END PROBLEM 9
 
 
@@ -362,7 +378,15 @@ def fastest_words(match):
     player_indices = range(len(get_all_times(match)))  # contains an *index* for each player
     word_indices = range(len(get_all_words(match)))    # contains an *index* for each word
     # BEGIN PROBLEM 10
-    "*** YOUR CODE HERE ***"
+    words = []
+    player_word = []
+    for i in player_indices:
+        print("i", i)
+        for j in word_indices:
+            print("j", j)
+
+
+
     # END PROBLEM 10
 
 
