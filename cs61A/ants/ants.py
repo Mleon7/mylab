@@ -134,7 +134,16 @@ class Ant(Insect):
             place.ant = self
         else:
             # BEGIN Problem 8b
-            assert place.ant is None, 'Two ants in {0}'.format(place)
+            # assert place.ant is None, 'Two ants in {0}'.format(place)
+            # if (place.ant.is_container == True) and (self.is_container == False):
+            if place.ant.can_contain(self):
+                place.ant.ant_contained = self
+            # elif (place.ant.is_container == False) and (self.is_container == True):
+            elif self.can_contain(place.ant):
+                self.ant_contained = place.ant
+                place.ant = self
+            else:
+                assert False, 'Two ants in {0}'.format(place)
             # END Problem 8b
         Insect.add_to(self, place)
 
@@ -181,6 +190,8 @@ class ThrowerAnt(Ant):
     damage = 1
     # ADD/OVERRIDE CLASS ATTRIBUTES HERE
     food_cost = 3
+    lower_bound = 0
+    upper_bound = float('inf')
 
     def nearest_bee(self):
         """Return the nearest Bee in a Place that is not the HIVE, connected to
@@ -192,10 +203,12 @@ class ThrowerAnt(Ant):
         # return random_bee(self.place.bees)  # REPLACE THIS LINE
         # 实在一头雾水，只好看网上的答案
         p = self.place
+        current = 0 # 表示包括当前位置
         while not p.is_hive:
-            if len(p.bees):
-                return random_bee(p.bees) # 不明白这个，不是返回最近的bee吗？怎么又是random的？
-            p = p.entrance # 这行结合while循环，表示从当前位置出发，一直编历到该行最后
+            if len(p.bees) and (self.lower_bound <= current <= self.upper_bound):
+                return random_bee(p.bees) # 不明白这个，不是返回最近的bee吗？怎么又是random的？# 总算明白了，因为同一个位置可以有多个bee，这是随机返回同个位置的某个bee，不是返回任意位置的bee
+            p = p.entrance # 这行结合while循环，表示从当前位置出发，一直遍历到该行最后
+            current += 1
         return None
 
         # END Problem 3 and 4
@@ -228,7 +241,9 @@ class ShortThrower(ThrowerAnt):
     food_cost = 2
     # OVERRIDE CLASS ATTRIBUTES HERE
     # BEGIN Problem 4
-    implemented = False   # Change to True to view in the GUI
+    lower_bound = 1
+    upper_bound = 3
+    implemented = True   # Change to True to view in the GUI
     # END Problem 4
 
 
@@ -239,7 +254,9 @@ class LongThrower(ThrowerAnt):
     food_cost = 2
     # OVERRIDE CLASS ATTRIBUTES HERE
     # BEGIN Problem 4
-    implemented = False   # Change to True to view in the GUI
+    lower_bound = 5
+    upper_bound = float('inf')
+    implemented = True   # Change to True to view in the GUI
     # END Problem 4
 
 
@@ -251,7 +268,7 @@ class FireAnt(Ant):
     food_cost = 5
     # OVERRIDE CLASS ATTRIBUTES HERE
     # BEGIN Problem 5
-    implemented = False   # Change to True to view in the GUI
+    implemented = True   # Change to True to view in the GUI
     # END Problem 5
 
     def __init__(self, health=3):
@@ -267,14 +284,63 @@ class FireAnt(Ant):
         """
         # BEGIN Problem 5
         "*** YOUR CODE HERE ***"
+        '''my version
+        # self.health -= amount
+        for target in self.place.bees[:]:
+            target.reduce_health(amount)
+        if self.health <= 0:  # 因为注释掉了 self.health -= amount，这个判断就没法用了
+            for target in self.place.bees[:]:
+                target.reduce_health(self.damage)
+            # self.death_callback()
+            # self.place.remove_insect(self)
+        super().reduce_health(amount) # 看网上答案的；不这样做，而是用前面三行注释的话没法通过
+        '''
+        # from web
+        p = self.place
+        for bee in p.bees[:]:
+            if self.health <= amount:
+                bee.reduce_health(amount + self.damage)
+            else:
+                bee.reduce_health(amount)
+        super().reduce_health(amount)
+
         # END Problem 5
 
 # BEGIN Problem 6
 # The WallAnt class
+class WallAnt(Ant):
+    name = 'Wall'
+    food_cost = 4
+    implemented = True
+
+    def __init__(self, health=4):
+        super().__init__(health)
 # END Problem 6
 
 # BEGIN Problem 7
 # The HungryAnt Class
+class HungryAnt(Ant):
+    name = 'Hungry'
+    food_cost = 4
+    chewing_turns = 3
+    implemented = True
+
+
+    def __init__(self, health=1, turns_to_chew=0):
+        self.turns_to_chew = turns_to_chew
+        super().__init__(health)
+
+    def action(self, gamestate):
+        p = self.place
+        if self.turns_to_chew == 0:
+            bee = random_bee(p.bees)
+            if bee is None: # 这个判断是看网上的，其它都是自己想的
+                return
+            bee.reduce_health(bee.health)
+            self.turns_to_chew = self.chewing_turns
+        else:
+            self.turns_to_chew -= 1
+
 # END Problem 7
 
 
@@ -291,11 +357,17 @@ class ContainerAnt(Ant):
     def can_contain(self, other):
         # BEGIN Problem 8a
         "*** YOUR CODE HERE ***"
+        if (not other.is_container) and (self.ant_contained == None):
+            return True
+        else:
+            return False
         # END Problem 8a
 
     def store_ant(self, ant):
         # BEGIN Problem 8a
         "*** YOUR CODE HERE ***"
+        if self.can_contain(ant):
+            self.ant_contained = ant
         # END Problem 8a
 
     def remove_ant(self, ant):
@@ -316,6 +388,8 @@ class ContainerAnt(Ant):
     def action(self, gamestate):
         # BEGIN Problem 8a
         "*** YOUR CODE HERE ***"
+        if self.ant_contained:
+            self.ant_contained.action(gamestate)
         # END Problem 8a
 
 
@@ -326,11 +400,28 @@ class BodyguardAnt(ContainerAnt):
     food_cost = 4
     # OVERRIDE CLASS ATTRIBUTES HERE
     # BEGIN Problem 8c
-    implemented = False   # Change to True to view in the GUI
+    implemented = True   # Change to True to view in the GUI
+    def __init__(self, health=2):
+        super().__init__(health)
     # END Problem 8c
 
 # BEGIN Problem 9
 # The TankAnt class
+class TankAnt(ContainerAnt):
+    name = 'Tank'
+    food_cost = 6
+    damage = 1
+    implemented = True
+
+    def __init__(self, health=2):
+        super().__init__(health)
+
+    def action(self, gamestate):
+        for bee in self.place.bees[:]:
+            bee.reduce_health(self.damage)
+        if self.ant_contained:
+            self.ant_contained.action(gamestate)
+        super().reduce_health(1)
 # END Problem 9
 
 
