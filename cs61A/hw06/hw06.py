@@ -79,6 +79,12 @@ def store_digits(n):
     >>> link1 = Link(3, Link(Link(4), Link(5, Link(6))))
     """
     "*** YOUR CODE HERE ***"
+    result = Link(n % 10)
+    n //= 10
+    while n > 0:
+        result = Link(n % 10, result)
+        n //= 10
+    return result
 
 
 def deep_map_mut(func, lnk):
@@ -99,6 +105,18 @@ def deep_map_mut(func, lnk):
     <9 <16> 25 36>
     """
     "*** YOUR CODE HERE ***"
+    # chatgpt
+    if isinstance(lnk, Link):
+        # Iterate through each element in the linked list
+        curr = lnk
+        while curr is not Link.empty:
+            # If the element is another linked list, recursively call deep_map_mut
+            if isinstance(curr.first, Link):
+                deep_map_mut(func, curr.first)
+            else:
+                # Apply func to the element and replace it with the result
+                curr.first = func(curr.first)
+            curr = curr.rest
 
 
 def two_list(vals, counts):
@@ -121,6 +139,16 @@ def two_list(vals, counts):
     Link(1, Link(1, Link(3, Link(3, Link(2)))))
     """
     "*** YOUR CODE HERE ***"
+    last_val = vals[-1]
+    lnk = Link(last_val)
+    for i in range(counts[-1] - 1):
+        lnk = Link(vals[-1], lnk)
+
+    for i in range(len(vals) - 2, -1, -1):
+        for _ in range(counts[i]):
+            lnk = Link(vals[i], lnk)
+    return lnk
+
 
 
 class VirFib():
@@ -259,3 +287,8 @@ class Tree:
                 tree_str += print_tree(b, indent + 1)
             return tree_str
         return print_tree(self).rstrip()
+
+a = [1, 3, 2]
+b = [1, 1, 1]
+c = two_list(a, b)
+print(c)
