@@ -38,7 +38,7 @@ def do_define_form(expressions, env):
         validate_form(expressions, 2, 2)  # Checks that expressions is a list of length exactly 2
         # BEGIN PROBLEM 4
         "*** YOUR CODE HERE ***"
-        # 将chatgpt给出思路，将名称、传参方式改掉就可以了
+        # chatgpt给出答案，将其中名称、传参方式改掉就可以了
         symbol = signature
         value = scheme_eval(expressions.rest.first, env)
         env.define(symbol, value)
@@ -64,6 +64,9 @@ def do_quote_form(expressions, env):
     validate_form(expressions, 1, 1)
     # BEGIN PROBLEM 5
     "*** YOUR CODE HERE ***"
+    print("DEBUG", "do_quote_form", expressions)
+    # chatgpt
+    return expressions.first
     # END PROBLEM 5
 
 
