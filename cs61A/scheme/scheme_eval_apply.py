@@ -35,6 +35,10 @@ def scheme_eval(expr, env, _=None):  # Optional third argument is ignored
     else:
         # BEGIN PROBLEM 3
         "*** YOUR CODE HERE ***"
+        # chatgpt
+        operator = scheme_eval(first, env)  # Step 1: Evaluate the operator
+        operands = rest.map(lambda operand: scheme_eval(operand, env))  # Step 2: Evaluate the operands
+        return scheme_apply(operator, operands, env)  # Step 3: Apply the procedure and return the result
         # END PROBLEM 3
 
 
