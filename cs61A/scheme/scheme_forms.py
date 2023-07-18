@@ -177,7 +177,7 @@ def do_or_form(expressions, env):
 
     while expressions is not nil:
         value = scheme_eval(expressions.first, env)
-        print("DEBUG", "do_and_form: ", value)
+        print("DEBUG", "do_or_form: ", value)
         if is_scheme_true(value):
             return value
         expressions = expressions.rest
@@ -204,6 +204,10 @@ def do_cond_form(expressions, env):
         if is_scheme_true(test):
             # BEGIN PROBLEM 13
             "*** YOUR CODE HERE ***"
+            if clause.rest is nil:
+                return test
+            else:
+                return eval_all(clause.rest, env)
             # END PROBLEM 13
         expressions = expressions.rest
 
