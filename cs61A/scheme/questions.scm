@@ -25,9 +25,18 @@
 
 ;; Merge two lists LIST1 and LIST2 according to ORDERED? and return
 ;; the merged lists.
-(define (merge ordered? list1 list2)
+; (define (merge ordered? list1 list2)
   ; BEGIN PROBLEM 16
-  'replace-this-line
+; 果不其然，保持problem 15的上文，拿promblem 16的问题再提问chatgpt，直接就得到了正确答案
+(define (merge ordered? lst1 lst2)
+  (cond
+    ((null? lst1) lst2) ; base case: lst1 is empty, return lst2
+    ((null? lst2) lst1) ; base case: lst2 is empty, return lst1
+    ((ordered? (car lst1) (car lst2)) ; compare the first elements
+     (cons (car lst1) (merge ordered? (cdr lst1) lst2))) ; lst1 element is smaller
+    (else
+     (cons (car lst2) (merge ordered? lst1 (cdr lst2)))) ; lst2 element is smaller
+    )
   )
   ; END PROBLEM 16
 
