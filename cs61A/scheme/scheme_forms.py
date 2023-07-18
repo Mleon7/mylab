@@ -147,7 +147,7 @@ def do_and_form(expressions, env):
     # 这个while参考 scheme_eval_apply.py 的 eval_all 函数
     while expressions is not nil:
         value = scheme_eval(expressions.first, env)
-        print("DEBUG", "do_and_form: ", value)
+        # print("DEBUG", "do_and_form: ", value)
         if is_scheme_false(value):
             return value
         expressions = expressions.rest
@@ -177,7 +177,7 @@ def do_or_form(expressions, env):
 
     while expressions is not nil:
         value = scheme_eval(expressions.first, env)
-        print("DEBUG", "do_or_form: ", value)
+        # print("DEBUG", "do_or_form: ", value)
         if is_scheme_true(value):
             return value
         expressions = expressions.rest
