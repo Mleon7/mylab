@@ -140,6 +140,19 @@ def do_and_form(expressions, env):
     """
     # BEGIN PROBLEM 12
     "*** YOUR CODE HERE ***"
+    # chatgpt给出基本思路，我结合之前代码进行改动，这次改动较大
+    if not expressions:
+        return True  # Empty 'and' expression evaluates to #t
+
+    # 这个while参考 scheme_eval_apply.py 的 eval_all 函数
+    while expressions is not nil:
+        value = scheme_eval(expressions.first, env)
+        print("DEBUG", "do_and_form: ", value)
+        if is_scheme_false(value):
+            return value
+        expressions = expressions.rest
+
+    return value
     # END PROBLEM 12
 
 
@@ -159,6 +172,17 @@ def do_or_form(expressions, env):
     """
     # BEGIN PROBLEM 12
     "*** YOUR CODE HERE ***"
+    if not expressions:
+        return False
+
+    while expressions is not nil:
+        value = scheme_eval(expressions.first, env)
+        print("DEBUG", "do_and_form: ", value)
+        if is_scheme_true(value):
+            return value
+        expressions = expressions.rest
+
+    return value
     # END PROBLEM 12
 
 
