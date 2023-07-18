@@ -48,6 +48,13 @@ def do_define_form(expressions, env):
         # defining a named procedure e.g. (define (f x y) (+ x y))
         # BEGIN PROBLEM 10
         "*** YOUR CODE HERE ***"
+        # chatgpt
+        function_name = signature.first
+        formals = signature.rest
+        body = expressions.rest
+        procedure = do_lambda_form(Pair(formals, body), env)
+        env.define(function_name, procedure)
+        return function_name
         # END PROBLEM 10
     else:
         bad_signature = signature.first if isinstance(signature, Pair) else signature
