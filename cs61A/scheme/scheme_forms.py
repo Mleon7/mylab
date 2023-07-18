@@ -64,7 +64,7 @@ def do_quote_form(expressions, env):
     validate_form(expressions, 1, 1)
     # BEGIN PROBLEM 5
     "*** YOUR CODE HERE ***"
-    print("DEBUG", "do_quote_form", expressions)
+    # print("DEBUG", "do_quote_form", expressions)
     # chatgpt
     return expressions.first
     # END PROBLEM 5
@@ -95,6 +95,9 @@ def do_lambda_form(expressions, env):
     validate_formals(formals)
     # BEGIN PROBLEM 7
     "*** YOUR CODE HERE ***"
+    # chatgpt
+    body = expressions.rest
+    return LambdaProcedure(formals, body, env)
     # END PROBLEM 7
 
 
