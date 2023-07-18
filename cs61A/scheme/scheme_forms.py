@@ -234,6 +234,16 @@ def make_let_frame(bindings, env):
     names = vals = nil
     # BEGIN PROBLEM 14
     "*** YOUR CODE HERE ***"
+    # chatgpt 给的没法用，我又一脸懵逼，只好从网上找
+    # https://github.com/y1cunhui/cs61A-2021Fall/blob/main/proj04-scheme/scheme_forms.py#L213
+    while bindings != nil:
+        item = bindings.first
+        validate_form(item, 2, 2)
+        names = Pair(item.first, names)
+        vals = Pair(eval_all(item.rest, env), vals)
+        bindings = bindings.rest
+    validate_formals(names)
+
     # END PROBLEM 14
     return env.make_child_frame(names, vals)
 
