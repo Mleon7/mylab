@@ -37,9 +37,9 @@ def scheme_eval(expr, env, _=None):  # Optional third argument is ignored
         "*** YOUR CODE HERE ***"
         # chatgpt
         operator = scheme_eval(first, env)  # Step 1: Evaluate the operator
-        print("DEBUG", "operator: ", operator)
+        # print("DEBUG", "operator: ", operator)
         operands = rest.map(lambda operand: scheme_eval(operand, env))  # Step 2: Evaluate the operands
-        print("DEBUG", "operands: ", operands)
+        # print("DEBUG", "operands: ", operands)
         return scheme_apply(operator, operands, env)  # Step 3: Apply the procedure and return the result
         # END PROBLEM 3
 
@@ -59,13 +59,13 @@ def scheme_apply(procedure, args, env):
             args = args.rest
         if procedure.need_env:
             py_list.append(env)
-        print("DEBUG:", py_list)
+        # print("DEBUG:", py_list)
         # END PROBLEM 2
         try:
             # BEGIN PROBLEM 2
             "*** YOUR CODE HERE ***"
             result = procedure.py_func(*py_list)
-            print("DEBUG:", result)
+            # print("DEBUG:", result)
             return result
             # END PROBLEM 2
         except TypeError as err:
@@ -98,7 +98,16 @@ def eval_all(expressions, env):
     2
     """
     # BEGIN PROBLEM 6
-    return scheme_eval(expressions.first, env)  # replace this with lines of your own code
+    # return scheme_eval(expressions.first, env)  # replace this with lines of your own code
+    # 将chatgpt的答案中的 None 改成 nil 就可以了
+    if expressions is nil:
+        return None
+
+    while expressions.rest is not nil:
+        scheme_eval(expressions.first, env)
+        expressions = expressions.rest
+
+    return scheme_eval(expressions.first, env)
     # END PROBLEM 6
 
 
