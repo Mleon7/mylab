@@ -58,6 +58,15 @@ class Frame:
             raise SchemeError('Incorrect number of arguments to function call')
         # BEGIN PROBLEM 8
         "*** YOUR CODE HERE ***"
+        # chatgpt
+        new_frame = Frame(self)  # Create a new frame with the current frame as the parent
+
+        while formals is not nil and vals is not nil:
+            new_frame.define(formals.first, vals.first)  # Bind formal parameter to its corresponding argument value
+            formals = formals.rest
+            vals = vals.rest
+
+        return new_frame
         # END PROBLEM 8
 
 ##############
