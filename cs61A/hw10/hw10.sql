@@ -43,11 +43,25 @@ CREATE TABLE size_of_dogs AS
   JOIN sizes s ON d.height > s.min AND d.height <= s.max; -- 还是第一次知道能这么写，一直以为只能是 ON 然后 =
 
 
--- Filling out this helper table is optional
+-- -- Filling out this helper table is optional
+-- CREATE TABLE siblings AS
+--   SELECT "REPLACE THIS LINE WITH YOUR SOLUTION";
+
+-- -- Sentences about siblings that are the same size
+-- CREATE TABLE sentences AS
+--   SELECT "REPLACE THIS LINE WITH YOUR SOLUTION";
+
+-- Creating the siblings table
+-- 按照chatgpt的做法，是用JOIN，我跟着这么想不知道怎么做到dogs JOIN dogs，只好上网找答案，没想到压根就不用 JOIN 。。
+-- 还有，英文不好，不知道居然还是要同个父母 siblings
+-- 另外，我本来还在想着怎么比较相同大小，忘了已经有 size_of_dogs 这张表了
 CREATE TABLE siblings AS
-  SELECT "REPLACE THIS LINE WITH YOUR SOLUTION";
+  SELECT a.child AS aname, b.child AS bname, sa.size AS asize, sb.size AS bsize 
+        FROM parents AS a, parents AS b, size_of_dogs AS sa, size_of_dogs AS sb 
+        WHERE a.parent = b.parent AND aname < bname AND sa.name = aname AND sb.name = bname;
 
--- Sentences about siblings that are the same size
+-- Creating the sentences table
 CREATE TABLE sentences AS
-  SELECT "REPLACE THIS LINE WITH YOUR SOLUTION";
-
+  SELECT "The two siblings, " || aname || " plus " || bname
+        || " have the same size: "|| asize
+        FROM siblings WHERE asize = bsize;
