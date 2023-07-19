@@ -53,7 +53,7 @@ CREATE TABLE size_of_dogs AS
 
 -- Creating the siblings table
 -- 按照chatgpt的做法，是用JOIN，我跟着这么想不知道怎么做到dogs JOIN dogs，只好上网找答案，没想到压根就不用 JOIN 。。
--- 还有，英文不好，不知道居然还是要同个父母 siblings
+-- 还有，英文不好，不知道居然还是要同个父母 a.parent = b.parent
 -- 另外，我本来还在想着怎么比较相同大小，忘了已经有 size_of_dogs 这张表了
 CREATE TABLE siblings AS
   SELECT a.child AS aname, b.child AS bname, sa.size AS asize, sb.size AS bsize 
