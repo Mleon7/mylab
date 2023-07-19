@@ -37,7 +37,10 @@ CREATE TABLE by_parent_height AS
 
 -- The size of each dog
 CREATE TABLE size_of_dogs AS
-  SELECT "REPLACE THIS LINE WITH YOUR SOLUTION";
+  -- SELECT "REPLACE THIS LINE WITH YOUR SOLUTION";
+  SELECT d.name, s.size
+  FROM dogs d
+  JOIN sizes s ON d.height > s.min AND d.height <= s.max; -- 还是第一次知道能这么写，一直以为只能是 ON 然后 =
 
 
 -- Filling out this helper table is optional
