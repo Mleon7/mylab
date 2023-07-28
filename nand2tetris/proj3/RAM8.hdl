@@ -1,0 +1,40 @@
+// This file is part of www.nand2tetris.org
+// and the book "The Elements of Computing Systems"
+// by Nisan and Schocken, MIT Press.
+// File name: projects/03/a/RAM8.hdl
+
+/**
+ * Memory of 8 registers, each 16 bit-wide. Out holds the value
+ * stored at the memory location specified by address. If load==1, then 
+ * the in value is loaded into the memory location specified by address 
+ * (the loaded value will be emitted to out from the next time step onward).
+ */
+
+CHIP RAM8 {
+    IN in[16], load, address[3];
+    OUT out[16];
+
+    PARTS:
+    // 题目要求是:
+    // load为1时, 向address处写入in, 并作为out的值
+    // load为0时, 不写入, 从address读出out
+    // 我不懂的点在于, 怎么向address写值、读值
+    // 下面这两行我觉得是要用到的
+    // Mux16(a=state, b=in, sel=load, out=temp);
+    // Register(in=in, load=load, out=temp);
+
+    // https://github.com/PKUFlyingPig/NandToTetris/blob/master/projects/03/a/RAM8.hdl
+    // 用 out0 到 out7 表示address的八个值
+    // 用 a 到 h 表示要处理address哪个值(是写-load=1, 还是不写-load=0)
+    // 也就是说，正确的输入是: load + address, load决定是否向对应地址写值
+    DMux8Way(in=load ,sel=address ,a=a ,b=b ,c=c ,d=d ,e=e ,f=f ,g=g ,h=h );
+    Register(in=in ,load=a ,out=out0 );
+    Register(in=in ,load=b ,out=out1 );
+    Register(in=in ,load=c ,out=out2 );
+    Register(in=in ,load=d ,out=out3 );
+    Register(in=in ,load=e ,out=out4 );
+    Register(in=in ,load=f ,out=out5 );
+    Register(in=in ,load=g ,out=out6 );
+    Register(in=in ,load=h ,out=out7 );
+    Mux8Way16(a=out0 ,b=out1 ,c=out2 ,d=out3 ,e=out4 ,f=out5 ,g=out6 ,h=out7 ,sel=address ,out=out );
+}
